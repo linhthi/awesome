@@ -22,8 +22,8 @@ class AwesomeImageLoss():
                  ) -> None:
         super().__init__()
         self.name = name
-        self.criterion = nn.BCELoss() if criterion is None else criterion
-        self.prior_criterion = nn.BCELoss() if prior_criterion is None else prior_criterion
+        self.criterion = nn.BCEWithLogitsLoss() if criterion is None else criterion
+        self.prior_criterion = nn.BCEWithLogitsLoss() if prior_criterion is None else prior_criterion
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
