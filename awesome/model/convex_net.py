@@ -142,7 +142,8 @@ class SkipBlock(nn.Module):
         self.skp = nn.Linear(in_skip_features, out_features, bias=False)
 
     def forward(self, x: torch.Tensor, x_input: torch.Tensor):
-        return F.relu(self.ln(x) + self.skp(x_input))
+        # return F.relu(self.ln(x) + self.skp(x_input)) # original
+        return F.softplus(self.ln(x) + self.skp(x_input))
 
     def reset_parameters(self) -> None:
         self.ln.apply(weights_init_uniform('relu'))
@@ -150,8 +151,9 @@ class SkipBlock(nn.Module):
 
     def enforce_convexity(self) -> None:
         with torch.no_grad():
-            self.ln.weight.data = F.relu(self.ln.weight.data)
+            # self.ln.weight.data = F.relu(self.ln.weight.data) # orginal
             #self.skp.weight.data = F.relu(self.skp.weight.data)
+            self.ln.weight.data = F.softplus(self.ln.weight.data)
 
 
 
