@@ -151,10 +151,10 @@ class SkipBlock(nn.Module):
 
     def enforce_convexity(self) -> None:
         with torch.no_grad():
-            # self.ln.weight.data = F.relu(self.ln.weight.data) # orginal
+            self.ln.weight.data = F.relu(self.ln.weight.data) # orginal
             #self.skp.weight.data = F.relu(self.skp.weight.data)
-            self.ln.weight.data = F.softplus(self.ln.weight.data)
-            self.ln.weight.data = torch.clamp(self.ln.weight.data, min=1e-6)
+            # self.ln.weight.data = F.softplus(self.ln.weight.data)
+            # self.ln.weight.data = torch.clamp(self.ln.weight.data, min=1e-6)
 
 
 
