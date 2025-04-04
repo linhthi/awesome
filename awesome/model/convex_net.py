@@ -144,7 +144,7 @@ class SkipBlock(nn.Module):
 
     def forward(self, x: torch.Tensor, x_input: torch.Tensor):
         # return F.relu(self.ln(x) + self.skp(x_input)) # original
-        return return self.act_layer(self.ln(x) + self.skp(x_input))
+        return self.act_layer(self.ln(x) + self.skp(x_input))
 
     def reset_parameters(self) -> None:
         self.ln.apply(weights_init_uniform('relu'))
