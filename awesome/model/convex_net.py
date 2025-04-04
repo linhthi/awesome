@@ -154,7 +154,7 @@ class SkipBlock(nn.Module):
             # self.ln.weight.data = F.relu(self.ln.weight.data) # orginal
             #self.skp.weight.data = F.relu(self.skp.weight.data)
             self.ln.weight.data = F.softplus(self.ln.weight.data)
-            self.skp.weight.data = F.softplus(self.skp.weight.data)
+            self.ln.weight.data = torch.clamp(self.ln.weight.data, min=1e-6)
 
 
 
