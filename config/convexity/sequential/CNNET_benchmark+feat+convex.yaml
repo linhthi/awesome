@@ -21,7 +21,7 @@ AwesomeConfig:
     xytransform: xy
     xytype: feat
   dataset_type: awesome.dataset.sisbosi_dataset.SISBOSIDataset
-  device: cuda
+  device: cpu
   diff_config: null
   dtype: torch.float32
   loss_args:
@@ -72,7 +72,7 @@ AwesomeConfig:
     mode: lte
     verbose: true
   name_experiment: CNNET_benchmark+feat+convex
-  num_epochs: 3000
+  num_epochs: 100
   optimizer_args:
     amsgrad: false
     betas:
