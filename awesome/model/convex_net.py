@@ -7,6 +7,8 @@ from awesome.model.real_nvp.resnet_1d import WNLinear, weights_init_uniform, wei
 from awesome.util.pixelize import pixelize
 
 
+activation_function = 'sigmoid'  # Global variable to control activation function
+
 class ConvexNet(nn.Module):
     def __init__(self,
                  n_hidden: int = 130,
@@ -29,15 +31,49 @@ class ConvexNet(nn.Module):
         # define forward pass
         # Input of shape (batch_size, 2)
         x_input = x
-        x = F.relu(self.W0y(x))
-        x = F.relu(self.W1z(x) + self.W1y(x_input))
+        if activation_function == "relu":
+            x = F.relu(self.W0y(x))
+            x = F.relu(self.W1z(x) + self.W1y(x_input))
+        
+        elif activation_function == "softplus":
+            x = F.softplus(self.W0y(x))
+            x = F.softplus(self.W1z(x) + self.W1y(x_input))
+        elif activation_function == "sigmoid":
+            x = torch.sigmoid(self.W0y(x))
+            x = torch.sigmoid(self.W1z(x) + self.W1y(x_input))
+        elif activation_function == "tanh":
+            x = torch.tanh(self.W0y(x))
+            x = torch.tanh(self.W1z(x) + self.W1y(x_input))
+        elif activation_function == "exp":
+            x = torch.exp(self.W0y(x))
+            x = torch.exp(self.W1z(x) + self.W1y(x_input))
+        elif activation_function == "softmax":
+            x = F.softmax(self.W0y(x), dim=0)
+            x = F.softmax(self.W1z(x) + self.W1y(x_input), dim=0)
         x = self.W2z(x) + self.W2y(x_input)
         return x
 
     def enforce_convexity(self) -> None:
         with torch.no_grad():
-            self.W1z.weight.data = F.relu(self.W1z.weight.data)
-            self.W2z.weight.data = F.relu(self.W2z.weight.data)
+            if activation_function == "relu":
+                self.W1z.weight.data = F.relu(self.W1z.weight.data)
+                self.W2z.weight.data = F.relu(self.W2z.weight.data)
+            elif activation_function == "softplus":     
+                self.W1z.weight.data = F.softplus(self.W1z.weight.data)
+                self.W2z.weight.data = F.softplus(self.W2z.weight.data)
+            elif activation_function == "sigmoid":
+                self.W1z.weight.data = torch.sigmoid(self.W1z.weight.data)
+                self.W2z.weight.data = torch.sigmoid(self.W2z.weight.data)
+            elif activation_function == "tanh":   
+                self.W1z.weight.data = torch.tanh(self.W1z.weight.data)
+                self.W2z.weight.data = torch.tanh(self.W2z.weight.data)     
+            elif activation_function == "exp":      
+                self.W1z.weight.data = torch.exp(self.W1z.weight.data)
+                self.W2z.weight.data = torch.exp(self.W2z.weight.data)
+            elif activation_function == "softmax":
+                self.W1z.weight.data = F.softmax(self.W1z.weight.data, dim=0)
+                self.W2z.weight.data = F.softmax(self.W2z.weight.data, dim=0)
+            
 
 
 class WNSkipBlock(nn.Module):
@@ -207,7 +243,18 @@ class ConvexNextNet(nn.Module):
         # define forward pass
         # Input of shape (batch_size, 2)
         x_input = x
-        x = F.relu(self.input(x))
+        if activation_function == "relu":
+            x = F.relu(self.input(x))
+        elif activation_function == "softplus":
+            x = F.softplus(self.input(x))
+        elif activation_function == "sigmoid":
+            x = torch.sigmoid(self.input(x))
+        elif activation_function == "tanh":
+            x = torch.tanh(self.input(x))
+        elif activation_function == "exp":  
+            x = torch.exp(self.input(x))
+        elif activation_function == "softmax":
+            x = F.softmax(self.input(x), dim=0)
         for i in range(len(self.skip)):
             x = self.skip[i](x, x_input=x_input)
         x = self.out(x, x_input=x_input)
