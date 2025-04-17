@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
+import os
+import sys
+# Get the parent directory
+parent_dir = os.path.abspath(os.path.join(os.getcwd()))
+print(parent_dir)
+# Add the parent directory to sys.path
+sys.path.append(parent_dir)
+
+
 from awesome.util.path_tools import format_os_independent, relpath
 import argparse
 import logging  # noqa
-import os
+
+
+
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -57,7 +68,7 @@ def get_config() -> Config:
 def main(config: Config):
     logging.info(f"Setup: {config.name_experiment}")
     # Setup
-
+    config.device = "cpu"
     runner = AwesomeRunner(config)
     runner.build()
 
