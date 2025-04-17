@@ -176,6 +176,7 @@ class SkipBlock(nn.Module):
         super().__init__()
         self.ln = nn.Linear(in_features, out_features)
         self.skp = nn.Linear(in_skip_features, out_features, bias=False)
+
         act_fn = activation_function.lower()
         self.activation = get_activation(act_fn)
         
